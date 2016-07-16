@@ -10,4 +10,11 @@ class Channel extends Model
         'title', 'slug', 'color'
     ];
 
+    /**
+     * Change Route-Model binding key
+     * @return field to bind by
+     */
+    public function getRouteKeyName() {
+        return 'slug';
+    }
 }

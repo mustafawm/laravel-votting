@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\CommunityLinkAlreadySubmitted;
+
 
 class CommunityLink extends Model
 {
@@ -17,6 +19,7 @@ class CommunityLink extends Model
 
     /**
      * DB Realation
+     *
      * @return App\User
      */
     public function creator()
@@ -25,6 +28,7 @@ class CommunityLink extends Model
     }
     /**
      * DB Relationship
+     *
      * @return App\Channel
      */
     public function channel()
@@ -32,7 +36,12 @@ class CommunityLink extends Model
         return $this->belongsTo(Channel::class);
     }
 
-    // Methods
+    /**
+     * Handle user's submission
+     *
+     * @param  User   $user
+     * @return $link
+     */
     public static function from(User $user)
     {
         $link = new static;
@@ -48,21 +57,58 @@ class CommunityLink extends Model
 
     /**
      * Contribute link to app
+     *
      * @param  Request $attributes from user
-     * @return True?
+     * @return Boolean
+     * @throws CommunityLinkAlreadySubmitted exception
      */
     public function contribute($attributes)
     {
+        if ($existing = $this->hasBeenSubmittedBefore($attributes['link'])) {
+
+            $existing->touch();
+
+            throw new CommunityLinkAlreadySubmitted;
+        }
+
         return $this->fill($attributes)->save();
     }
 
     /**
-     * Approve Link
+     * Approve submitted link
+     *
      * @return App\CommunityLink
      */
     public function approve()
     {
         return $this->approved = true;
+    }
+
+
+    /**
+     * Query Scope down to a specefic channel
+     *
+     * @param  Builder $builder
+     * @param  App\Channel $channel
+     * @return $builder
+     */
+    public function scopeForChannel($builder, $channel)
+    {
+        if ($channel->exists) {
+            return $builder->where('channel_id', $channel->id);
+        }
+        return $builder;
+    }
+
+    /**
+     * Check if the link has been submitted before
+     *
+     * @param  String  $link
+     * @return App\CommunityLink
+     */
+    protected function hasBeenSubmittedBefore($link)
+    {
+        return static::where('link', $link)->first();
     }
 
 }

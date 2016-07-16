@@ -4,26 +4,15 @@
 	<div class="row">
 
 		<div class="col-md-8">
-			<ur class="links">
-				@if(count($links))
-					@foreach($links as $link)
-						<li class="links__link">
-							<span class="label" style="background: {{$link->channel->color}}">
-								{{$link->channel->title}}
-							</span>
+			<h3>
+				<a href="/community"> Community Links</a>
 
-							<a href="{{$link->link}}" target="_blank"> {{$link->title}}</a>
-
-							<small>
-								Contributed by: <a href="#"> {{$link->creator->name}} </a>
-								{{ $link->updated_at->diffForHumans() }}
-							</small>
-						</li>
-					@endforeach
-				@else
-					<li> No contributions yet!</li>
+				@if($channel->exists)
+				<span>&mdash; {{$channel->title}}</span>
 				@endif
-			</ur>
+			</h3>
+			@include('community.list')
+
 		</div>
 
 		<div class="col-md-4">
