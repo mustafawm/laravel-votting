@@ -18,11 +18,10 @@ class CommunityLinksController extends Controller
      */
     public function index(Channel $channel = null)
     {
-        $links = CommunityLink::forChannel($channel)
+        $links = CommunityLink::with('votes')->forChannel($channel)
                 ->where('approved', 1)
                 ->latest('updated_at')
                 ->paginate(2);
-
         $channels = Channel::orderBy('title', 'asc')->get();
 
         return view('community.index', compact('links', 'channels', 'channel'));

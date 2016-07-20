@@ -37,6 +37,15 @@ class CommunityLink extends Model
     }
 
     /**
+     * DB Relationship
+     * @return App\CommunityLinkVotes
+     */
+    public function votes()
+    {
+        return $this->hasMany(CommunityLinkVote::class, 'community_link_id');
+    }
+
+    /**
      * Handle user's submission
      *
      * @param  User   $user
