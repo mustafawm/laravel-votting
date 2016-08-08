@@ -1,11 +1,11 @@
 <ur class="list-group">
 	@if(count($links))
 		@foreach($links as $link)
-			<li class="list-group-item">
+			<li class="list-group-item CommunityLink">
 				<form method="POST" action="/votes/{{$link->id}}">
 					{!! csrf_field() !!}
 
-					<button class="btn {{ Auth::check() && Auth::user()->votedFor($link)  ? 'btn-success' : ''}} ">
+					<button class="btn {{ Auth::check() && Auth::user()->votedFor($link)  ? 'btn-success' : 'btn-default'}} ">
 						{{ $link->votes->count() }}
 					</button>
 				</form>
@@ -29,4 +29,4 @@
 	@endif
 </ur>
 
-{{ $links->links() }}
+{{ $links->appends(request()->query())->links() }}

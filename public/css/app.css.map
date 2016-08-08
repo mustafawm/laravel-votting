@@ -1,1 +1,1 @@
-{"version":3,"sources":["app.scss"],"names":[],"mappings":"AAAA;EACC,kBAAkB,EAClB","file":"app.css","sourcesContent":[".list-group-item > .label {\n\tmargin-right: 1em;\n}\n"],"sourceRoot":"/source/"}
+{"version":3,"sources":["app.scss"],"names":[],"mappings":"AAAA;EACC,kBAAkB,EAClB;;AAED;EACC,sBAAsB;EACtB,kBAAkB,EAClB","file":"app.css","sourcesContent":[".list-group-item > .label {\n\tmargin-right: 1em;\n}\n\n.CommunityLink > form {\n\tdisplay: inline-block;\n\tmargin-right: 1em;\n}\n"],"sourceRoot":"/source/"}
