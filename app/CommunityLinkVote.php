@@ -10,5 +10,17 @@ class CommunityLinkVote extends Model
 
     protected $fillable = ['user_id', 'community_link_id'];
 
+    /**
+     * Toggle vote
+     *
+     * @return Boolean
+     */
+    public function toggle()
+    {
+        if ($this->exists) {
+            return $this->delete();
+        }
 
+        return $this->save();
+    }
 }

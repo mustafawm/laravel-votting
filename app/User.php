@@ -3,6 +3,7 @@
 namespace App;
 
 use App\CommunityLink;
+use App\CommunityLinkVote;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -25,31 +26,40 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-
     /**
-     * Is $this user trusted?
-     * @return boolean
-     */
+    * Is $this user trusted?
+    * @return boolean
+    */
     public function isTrusted()
     {
         return !! $this->trusted; //!! cast to boolean
     }
 
     /**
-     * User votes for CommunityLink
+     * DB Relationship - Many to Many (a user can vote on many links,
+     * each link can be associated with many users)
      *
-     * @param  App\CommunityLink $link
-     * @return App\CommunityLinkVote
+     * @return
      */
-    public function voteFor(CommunityLink $link)
+    public function votes()
     {
-        return $link->votes()->create(['user_id' => $this->id]);
+        return $this->belongsToMany(CommunityLink::class, 'community_links_votes')
+            ->withTimestamps(); //name of pivot table
+    }
+
+    public function toggleVoteFor(CommunityLink $link)
+    {
+        CommunityLinkVote::firstOrNew([
+            'user_id' => auth()->id(),
+            'community_link_id' => $link->id
+        ])->toggle();
     }
 
     /**
-     * [votedFor description]
-     * @param  CommunityLink $link [description]
-     * @return [type]              [description]
+     * Wheather or not User has voted for link
+     *
+     * @param  CommunityLink $link
+     * @return Boolean
      */
     public function votedFor(CommunityLink $link)
     {
