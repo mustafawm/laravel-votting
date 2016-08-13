@@ -18,9 +18,8 @@ class CommunityLinksController extends Controller
      */
     public function index(Channel $channel = null)
     {
-        $orderBy = request()->exists('popular') ? 'vote_counts' : 'updated_at';
 
-        $links = (new CommunityLinksQuery)->get($channel, $orderBy);
+        $links = (new CommunityLinksQuery)->get(request()->exists('popular'), $channel);
 
         $channels = Channel::orderBy('title', 'asc')->get();
 
